@@ -1,6 +1,6 @@
 # Setup
 
-First create a docroot directory in the root of this project (where .lando.yml lives)
+First create a www directory in the root of this project (where .lando.yml lives)
 
 ```bash
  mkdir www
