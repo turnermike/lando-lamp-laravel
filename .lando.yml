@@ -1,0 +1,54 @@
+name: laravel
+recipe: laravel
+config:
+  webroot: www/public
+services:
+  phpmyadminserver:
+    type: phpmyadmin
+    hosts:
+      - mysql57
+    ssl: true
+  mysql57:
+    type: mysql:5.7
+    portforward: true
+  appserver: # our php service
+    type: php:8.1
+    webroot: www/public
+    via: apache
+    ssl: true
+    xdebug: false
+    # build_as_root: # enables apache modules on build
+    #   - 'a2enmod headers'
+    #   - 'a2enmod proxy'
+    #   - 'a2enmod proxy_http'
+    #   - 'service apache2 restart'
+    # run_as_root:
+    #   # this is to set up supervisor for laravel-websockets. It doesn't work in build_as_root.
+    #   # 1. Install supervisor
+    #   # 2. Create websockets.conf file
+    #   # 3. Starts supervisor
+    #   - 'apt update -y && apt install -y supervisor && touch /etc/supervisor/conf.d/websockets.conf && echo "[program:websockets]" > /etc/supervisor/conf.d/websockets.conf && echo "command=/usr/local/bin/php /app/docroot/artisan websockets:serve" >> /etc/supervisor/conf.d/websockets.conf && echo "numprocs=1" >> /etc/supervisor/conf.d/websockets.conf && echo "autostart=true" >> /etc/supervisor/conf.d/websockets.conf && echo "autorestart=true" >> /etc/supervisor/conf.d/websockets.conf  && echo "redirect_stderr=true" >> /etc/supervisor/conf.d/websockets.conf && echo "stdout_logfile=/app/worker.log" >> /etc/supervisor/conf.d/websockets.conf && service supervisor stop && service supervisor start && supervisorctl stop websockets && supervisorctl start websockets'
+    config: # Add additional conf without having to ssh in to machine and edit files... nice.
+      php: config/php.ini
+    #   vhosts: config/default.conf
+  node: # for npm command
+    type: node
+
+proxy:
+  phpmyadminserver:
+    - pma.laravel.lndo.site
+tooling:
+  php: # lando php artisan cache:clear (for artisan and other php commands)
+    service: appserver
+  composer: # lando composer install (to set up composer)
+    service: appserver
+  npm: # lando npm run dev (to build laravel js)
+    service: node
+  # Anything below this may be superfluous but I haven't removed it
+  node:
+    service: node
+  gulp:
+    service: node
+  yarn:
+    service: node
+bindAddress: '0.0.0.0'
