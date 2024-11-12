@@ -1,14 +1,16 @@
-name: laravel
+name: lando-laravel-mysql
 recipe: laravel
 config:
   webroot: www/public
+
 services:
   phpmyadminserver:
     type: phpmyadmin
     hosts:
-      - mysql57
+      - database
     ssl: true
-  mysql57:
+
+  database:
     type: mysql:5.7
     portforward: true
   appserver: # our php service
@@ -36,7 +38,8 @@ services:
 
 proxy:
   phpmyadminserver:
-    - pma.laravel.lndo.site
+    - pma.lando-laravel-mysql.lndo.site
+
 tooling:
   php: # lando php artisan cache:clear (for artisan and other php commands)
     service: appserver
@@ -51,4 +54,5 @@ tooling:
     service: node
   yarn:
     service: node
+
 bindAddress: '0.0.0.0'
