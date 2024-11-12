@@ -25,9 +25,9 @@ services:
   phpmyadminserver:
     type: phpmyadmin
     hosts:
-      - mysql57
+      - database
     ssl: true
-  mysql57:
+  database:
     type: mysql:5.7
     portforward: true
   appserver:                                                          # PHP service
@@ -62,7 +62,13 @@ tooling:                                                              # lando ar
 bindAddress: '0.0.0.0'
 ```
 
-To rebuild
+Migrate the default Laravel database:
+
+```bash
+lando artisan migrate
+```
+
+To rebuild:
 
 ```bash
 lando rebuild -y
@@ -72,7 +78,10 @@ Environment info:
 
 ```bash
 lando info
+lando status
 ```
+
+Help:
 
 ```bash
 lando --help
