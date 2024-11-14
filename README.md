@@ -96,6 +96,12 @@ tooling:
     service: node
 ```
 
+Install Laravel
+
+```bash
+lando composer create-project laravel/laravel www
+```
+
 Migrate the default Laravel database:
 
 ```bash
