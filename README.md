@@ -19,18 +19,20 @@ Run Lando:
 name: lando-lamp-laravel
 recipe: lamp
 config:
-  webroot: app/public # lando needs to be able to resolve the dir to generate appserver urls, use a basic temp file (app/pubic/index.php) if app is not ready
+  webroot: app/public
+  # lando needs to be able to resolve the dir to generate appserver urls, use a basic temp file (app/pubic/index.php) if app is not ready
 proxy:
   appserver:
     - lando-lamp-laravel.lndo.site
 services:
   appserver:
-    config: {}
     ssl: true
     type: 'php:8.1'
     via: apache
     xdebug: false
     webroot: app/public
+    config:
+      php: config/php.ini
   database:
     config: {}
     authentication: mysql_native_password
@@ -40,6 +42,8 @@ services:
       user: lamp
       password: lamp
       database: lamp
+  node:
+    type: node
 tooling:
   composer:
     service: appserver
@@ -84,12 +88,18 @@ tooling:
         default: database
         alias:
           - h
+  artisan:
+    service: appserver
+  npm: # lando npm run dev (to build laravel js)
+    service: node
+  node:
+    service: node
 ```
 
 Migrate the default Laravel database:
 
 ```bash
-lando artisan migrate
+lando php artisan migrate
 ```
 
 To rebuild:
