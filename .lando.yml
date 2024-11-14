@@ -1,7 +1,7 @@
 name: lando-lamp-laravel
 recipe: lamp
 config:
-  webroot: app/public
+  webroot: app/public # lando needs to be able to resolve the dir to generate appserver urls, use a basic temp file (app/pubic/index.php) if app is not ready
 proxy:
   appserver:
     - lando-lamp-laravel.lndo.site
